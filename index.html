@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#07100f" />
+  <link rel="icon" href="data:," />
+  <title>GUN//RUN — Arena Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game-canvas" aria-label="3D gunfight arena"></canvas>
+    <div class="scanlines"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Gun Run home"><span class="brand-mark">G</span><span>GUN<span class="slash">//</span>RUN</span></a>
+      <div class="top-center"><span class="live-dot"></span><span id="status-label">ARENA PROTOCOL</span></div>
+      <button id="sound-btn" class="icon-btn" aria-label="Toggle sound">♫ <span>SOUND</span></button>
+    </header>
+
+    <section id="menu-screen" class="screen menu-screen">
+      <div class="menu-content">
+        <p class="eyebrow"><span>01</span> // SURVIVAL COMBAT SIMULATION</p>
+        <h1>LOCK.<br><span>LOAD.</span><br>OUTLAST.</h1>
+        <p class="intro">Ten stages. Ten bosses each. One shot at making it out.</p>
+        <div class="mode-label">CHOOSE YOUR DEPLOYMENT</div>
+        <div class="mode-grid">
+          <button class="mode-card selected" data-mode="solo">
+            <span class="mode-index">01</span><span class="mode-icon">◉</span>
+            <strong>LONE WOLF</strong><small>JUST YOU. NO BACKUP.</small><span class="mode-check">✓</span>
+          </button>
+          <button class="mode-card" data-mode="team">
+            <span class="mode-index">02</span><span class="mode-icon">⌘</span>
+            <strong>TEAM GROUP</strong><small>2 ALLIES HAVE YOUR SIX.</small><span class="mode-check">✓</span>
+          </button>
+        </div>
+        <div class="loadout-row">
+          <label class="loadout-picker"><span class="mode-label">DEPLOYMENT ZONE</span><select id="map-select" aria-label="Choose map"><option value="industrial">IRON YARD</option><option value="desert">DUSTBOWL</option><option value="chocolate">CHOCOLATE ISLAND</option></select></label>
+          <label class="loadout-picker"><span class="mode-label">PRIMARY WEAPON</span><select id="weapon-select" aria-label="Choose weapon"><option value="ak">AK-47</option><option value="machine">MACHINE GUN</option><option value="rpg">RPG</option></select></label>
+        </div>
+        <button id="deploy-btn" class="deploy-btn"><span>DEPLOY TO ARENA</span><b>↗</b></button>
+        <div class="controls-note"><span>W A S D</span> MOVE <i>•</i> <span>MOUSE</span> AIM <i>•</i> <span>CLICK</span> FIRE</div>
+      </div>
+      <div class="menu-side-note">SECTOR 09 <span>•</span> NO RESPAWNS</div>
+    </section>
+
+    <section id="hud" class="hud hidden" aria-live="polite">
+      <div class="hud-top-left">
+        <div class="stage-card"><span class="hud-label">STAGE</span><strong id="stage-value">01</strong><span class="stage-total">/ 10</span></div>
+        <div class="boss-card"><span class="hud-label">TARGET</span><strong id="boss-name">THE WARDEN</strong><div class="boss-meta"><span id="boss-number">BOSS 01</span><span class="enemy-count"><b id="kills-count">00</b> / 100</span></div></div>
+      </div>
+      <div class="hud-top-right"><div class="objective-tag"><span class="live-dot"></span> ELIMINATE ALL HOSTILES</div><button id="pause-btn" class="icon-btn pause-btn" aria-label="Pause game">Ⅱ <span>PAUSE</span></button></div>
+      <div class="boss-health-wrap"><div class="bar-caption"><span>BOSS INTEGRITY</span><span id="boss-hp-text">100%</span></div><div class="boss-health"><i id="boss-health-fill"></i></div></div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div id="hit-marker" class="hit-marker">×</div>
+      <div id="damage-flash" class="damage-flash"></div>
+      <div class="hud-bottom-left">
+        <div class="player-readout"><div class="health-icon">+</div><div><span class="hud-label">VITALS</span><div class="health-line"><strong id="hp-value">1000</strong><span> / 1000</span></div></div></div>
+        <div class="health-bar"><i id="player-health-fill"></i></div>
+        <div id="squad-status" class="squad-status hidden"><span>⌘</span> SQUAD ACTIVE <b>02</b></div>
+      </div>
+      <div class="hud-bottom-right"><div class="ammo-block"><span id="weapon-label" class="hud-label">AK-47 • AUTO</span><div><strong id="ammo-value">30</strong><span class="ammo-reserve">/ 180</span></div></div><button id="reload-btn" class="reload-btn">↻ <span>RELOAD</span><kbd>R</kbd></button></div>
+      <div class="toast" id="toast"></div>
+      <div id="mobile-controls" class="mobile-controls">
+        <div class="move-pad"><button data-move="forward">▲</button><div><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div></div>
+        <button id="mobile-fire" class="mobile-fire">FIRE</button>
+      </div>
+    </section>
+
+    <section id="pause-screen" class="screen modal-screen hidden">
+      <div class="modal-card"><p class="eyebrow">// FIELD PAUSE</p><h2>TAKE A<br><span>BREATHER.</span></h2><p id="pause-summary">The arena is waiting.</p><button id="resume-btn" class="deploy-btn"><span>BACK TO THE FIGHT</span><b>↗</b></button><button id="quit-btn" class="text-btn">ABANDON RUN</button></div>
+    </section>
+    <section id="end-screen" class="screen modal-screen hidden">
+      <div class="modal-card"><p class="eyebrow" id="end-eyebrow">// RUN COMPLETE</p><h2 id="end-title">ARENA<br><span>CONQUERED.</span></h2><p id="end-copy">Every boss down. You own this ground.</p><div class="run-stats"><div><strong id="final-kills">100</strong><span>BOSSES DOWN</span></div><div><strong id="final-stage">10</strong><span>STAGES CLEARED</span></div></div><button id="again-btn" class="deploy-btn"><span>RUN IT BACK</span><b>↗</b></button></div>
+    </section>
+    <div id="loader" class="loader"><div class="loader-mark">G</div><span>BUILDING THE ARENA</span><i></i></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
